@@ -1,0 +1,13 @@
+image: openbsd/latest
+secrets:
+- d541052d-5793-42f9-a19b-cbdc9648c70d
+packages:
+- rsync--
+sources:
+- https://github.com/hambsd/www.git
+tasks:
+- deploy: |
+    echo "www1.irl1.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINi0Yk3dIx1rYRxxpNbTdQDlJ/E5LsmvxCxZpPrjyVUL" >> ~/.ssh/known_hosts
+    cd www
+    rsync -e "ssh -i $HOME/.ssh/d541052d-5793-42f9-a19b-cbdc9648c70d" -avz * www_deploy@www1.irl1.net:htdocs/
+

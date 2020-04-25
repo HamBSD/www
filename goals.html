@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+
+<title>HamBSD: Goals</title>
+<meta name="description" content="HamBSD Goals">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="openbsd.css">
+<link rel="canonical" href="https://hambsd.org/goals.html">
+
+<h2 id="HamBSD">
+<a href="index.html">
+<b>Ham</b><i>BSD</i></a>
+Goals
+</h2>
+<hr>
+
+<h3>Project guidelines</h3>
+<ul>
+<li>
+Follow <a href="https://www.openbsd.org">OpenBSD</a>'s security practices
+and coding style
+<ul>
+<li>Consistently use <a href="https://man.hambsd.org/style.9">style(9)</a> for
+all kernel code
+<li>Avoid complex parsing in the kernel, which may lead to not implementing
+some protocol features
+<li>Consistently use
+<a href="https://man.hambsd.org/style.9">style(9)</a>,
+<a href="https://man.hambsd.org/pledge">pledge(2)</a> and
+<a href="https://man.hambsd.org/unveil">unveil(2)</a> across all userspace
+code
+<li>Use privilege-separation when parsing data from network, modem or disk
+</ul>
+<li>
+Keep the entire code base as unrestricted as possible (at least unrestricted
+enough to upstream to OpenBSD)
+</ul>
+
+<h3>Long-term goals</h3>
+<ul>
+<li>
+Provide a complete amateur radio network stack for OpenBSD
+<li>
+KISS TNC support:
+<ul>
+<li>
+a new <a href="https://man.hambsd.org/kiss.4">kiss(4)</a> line discipline
+<li>
+able to use any <a href="https://man.hambsd.org/tty.4">tty(4)</a> including
+<a href="https://man.hambsd.org/pty.4">pty(4)</a>s
+<li>
+attached via <a href="https://man.hambsd.org/ldattach.8">ldattach(8)</a>
+(can be done during <a href="https://man.hambsd.org/netstart.8">netstart(8)</a>)
+</ul>
+<li>
+<!--a href="https://man.hambsd.org/ax25.4" -->ax25(4) link layer support
+<ul>
+<li>
+TCP/IP in AX.25 encapsulation, simply give the interface an IP address
+<ul>
+<li>
+Compatibility with Linux hosts
+</ul>
+<li>
+AF_AX25 socket support, as a layer 2 (non-routed) protocol only, including:
+<ul>
+<li>
+SOCK_DGRAM &mdash; AX.25 UI frames
+</ul>
+</ul>
+<li>
+AX.25 dissection for <a href="https://man.hambsd.org/tcpdump.8">tcpdump(8)</a>
+<li>
+a new <a href="https://man.hambsd.org/kiss.4">kiss(4)</a> network interface
+for AX.25 over KISS
+<li>
+a new <a href="https://man.hambsd.org/axtap.4">axtap(4)</a> network interface
+for tunnels (e.g. APRS-IS and maybe soundmodems)
+<li>
+a new axeth(4) network pseudo-interface for AX.25 encapsulation in Ethernet
+<li>
+a new axip(4) network pseudo-interface for AX.25 encapsulation in IPv4/IPv6
+<li>
+<a href="https://man.hambsd.org/aprsd.8">aprsd(8)</a> &mdash; a new
+privilege-separated APRS tracker/digipeater
+<ul>
+<li>
+using location data available via the sensors framework, e.g. from <a
+href="https://man.hambsd.org/nmea.4">nmea(4)</a>
+<li>
+<i>using data available via some mechanism from a weather station</i>
+</ul>
+<li>
+<a href="https://man.hambsd.org/aprsisd.8">aprsisd(8)</a> &mdash; APRS-IS client
+daemon
+<ul>
+<li>
+using (perhaps exclusively) TLS connection to the APRS-IS server
+</ul>
+<li>
+<a href="https://man.hambsd.org/rkissd.8">rkissd(8)</a> &mdash; Remote KISS
+daemon
+<li>
+<i>softmodem(8) &mdash; software modem supporting Bell 103 AFSK, Bell 202 AFSK and
+PACTOR modes</i>
+<li>
+Consider the needs of both leisure and emergency operators
+</ul>
+
+<h3>Side goals</h3>
+These goals may be corollaries from other activities, but are not explicitly
+goals of this project:
+<ul>
+<li>
+A generic network interface driver for different serial line protocols (e.g.
+both KISS and SLIP)
+</ul>
+
+<h3>Non-goals</h3>
+<ul>
+<li>In-kernel digipeating</li>
+<ul>
+<li>
+AX.25 headers are variable length which gets a bit messy. We want to parse as
+little as possible in the kernel.
+</ul>
+<li>SOCK_SEQPACKET for AF_AX25</li>
+<ul>
+<li>This is a complicated lump of code. There are state machines and timers and
+all sorts. If you want this, you can do it in userspace using the SOCK_RAW
+support.
+</ul>
+<li>IPIP (protocol 4 or 94) tunnels</li>
+<ul>
+<li>Perhaps it is possible to be convinced that these are worthwhile, but the
+idea of a worldwide amateur Internet which joins the public Internet in places
+just isn't that appealing. Aside from the operating license headaches and
+potential abuse, it's not clear what services operate in 44net that are really
+useful for the average operator. It is already possible to establish tunnels
+using other technologies between sites.
+</ul>
+</ul>

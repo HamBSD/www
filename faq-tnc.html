@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+
+<title>HamBSD FAQ: Terminal Node Controllers</title>
+<meta name="description" content="HamBSD FAQ: Terminal Node Controllers">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="openbsd.css">
+<link rel="canonical" href="https://hambsd.org/faq-tnc.html">
+
+<h2 id="HamBSD">
+<a href="index.html">
+<b>Ham</b><i>BSD</i></a>
+FAQ: Terminal Node Controllers
+<small>
+<a href="faq.html">[FAQ Index]</a>
+</small>
+</h2>
+<hr>
+
+<ul>
+  <li><a href="#supported"   >Supported TNCs</a>
+  <li><a href="#config"      >Configuring a TNC as a network interface</a>
+  <li><a href="#init"        >Automatically initialising a TNC</a>
+  <li><a href="#kisstcp"     >Using KISS-over-TCP</a>
+</ul>
+
+<hr>
+
+<h2 id="supported"><a class="permalink" href="#supported">Supported TNCs</a></h2>
+
+<p>
+A list of TNCs that are known to work with HamBSD's kiss(4) driver are maintained in
+the <a href="https://man.hambsd.org/kiss.4">manual page</a>. Most, if not all, TNCs that
+implement the KISS protocol over a serial interface should be supported. This includes
+those with RS-232 interfaces, USB-to-serial interfaces, or using a pseudo-terminal
+(<a href="https://man.hambsd.org/pty.4">pty(4)</a>).
+
+<h2 id="config"><a class="permalink" href="#config">Configuring a TNC as a network interface</a></h2>
+
+<p>
+To configure a TNC to be used as an <a href="https://man.hambsd.org/ax25.4">AX.25</a> network
+interface on boot, create a <a href="https://man.hambsd.org/hostname.if.5">hostname.if(5)</a>
+file. For the first interface on the system this should be named <code>/etc/hostname.axkiss0</code>.
+
+<pre>lladdr MYCALL up
+!ldattach -s 1200 kiss cua00</pre>
+
+Replace <em>MYCALL</em> with your callsign. This also assumes the TNC's serial port (not on-air
+baud rate) operates at 1200 baud and is connected to the first serial port. For USB-to-serial
+interfaces, the first interface will be <em>cuaU0</em>.
+
+<h2 id="init"><a class="permalink" href="#init">Automatically initialising a TNC</a></h2>
+
+<p>
+A <a href="https://man.hambsd.org/chat.8">chat(8)</a> script may be used to
+initialise a TNC that requires configuration before it enters KISS mode. The
+following example works for the Kenwood TM-D700E:
+
+<pre>cmd:--cmd: 'kiss on'
+cmd: 'mon off'
+cmd: restart</pre>
+
+<p>
+This script can be stored as <code>/etc/kiss.chat</code> and run automatically
+by adding the following to the relevant <a href="https://man.hambsd.org/hostname.if.5">hostname.if(5)</a>
+file before calling ldattach:
+
+<pre>!stty -f /dev/cuaXX 9600
+!chat -t 5 -f /etc/kiss.chat &lt;&gt;/dev/cuaXX &gt;&amp;0</pre>
+
+<h2 id="kisstcp"><a class="permalink" href="#kisstcp">Using KISS-over-TCP</a></h2>
+
+<p>(This is not wrong, but <a
+href="https://man.hambsd.org/rkissd.8">rkissd(8)</a> is the preferred way to do
+this now. Need to update this answer.)</p>
+
+<p>
+There is currently no reliable method for this, as a broken TCP connection will not be reconnected.
+If the station will be attended as this is acceptable, first install <code>net/socat</code> from ports
+or packages:
+
+<pre>pkg_add socat</pre>
+
+<p>
+You can then use socat to bridge a TCP connection to a pty. Assuming the KISS TCP server
+is at 192.0.2.8 on port 8001:
+
+<pre>socat tcp:192.0.2.8:8001 pty &amp;</pre>
+
+<p>You can now proceed using the new pseudo-terminal as the serial port. You may wish to increase
+socat's verbosity to have it print the pty in use to avoid trial-and-error.
+
+</body>
+</html>

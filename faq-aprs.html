@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+
+<title>HamBSD FAQ: Automatic Packet Reporting System (APRS)</title>
+<meta name="description" content="HamBSD FAQ: Automatic Packet Reporting System (APRS)">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="openbsd.css">
+<link rel="canonical" href="https://hambsd.org/faq-aprs.html">
+
+<h2 id="HamBSD">
+<a href="index.html">
+<b>Ham</b><i>BSD</i></a>
+FAQ: Automatic Packet Reporting System (APRS)
+<small>
+<a href="faq.html">[FAQ Index]</a>
+</small>
+</h2>
+<hr>
+
+<ul>
+  <li><a href="#gps"        >Configuring an NMEA sensor</a>
+  <li><a href="#tracker"    >Sending APRS position reports</a>
+  <li><a href="#aprsis"     >Connecting to APRS-IS</a>
+</ul>
+
+<hr>
+
+<h2 id="gps"><a class="permalink" href="#gps">Configuring an NMEA sensor</a></h2>
+
+<p>
+To be supported by <a href="https://man.hambsd.org/nmea.4">nmea(4)</a>, your device must either attach to a serial port, or use a
+virtual (e.g. USB) serial port and use the NMEA 0183 protocol.
+<p>Assuming that your GPS device is attached to <tt>cuaU0</tt> and will 4800
+baud, edit <tt>/etc/ttys</tt> to add:
+<pre>cuaU0   "/sbin/ldattach nmea"   unknown on softcar</pre>
+<p>(If your device uses another baud rate, or other exotic settings, see the
+<a href="https://man.hambsd.org/ldattach.8">ldattach(8) manual page</a>.)
+<p>Then send <i>SIGHUP</i> to <a
+href="https://man.hambsd.org/init.8">init(8)</a> to cause the file to be
+reloaded:
+<pre># kill -s HUP 1</pre>
+<p>You can check the sensor is working correctly by using <a
+href="https://man.hambsd.org/sysctl.8">sysctl(8)</a>:
+<pre># sysctl hw.sensors.nmea0
+hw.sensors.nmea0.indicator0=On (Signal), OK
+hw.sensors.nmea0.timedelta0=-0.001002 secs (GPS autonomous), OK, Sun Oct 28 17:08:04.998
+hw.sensors.nmea0.angle0=57.3748 degrees (Latitude), OK
+hw.sensors.nmea0.angle1=-2.3849 degrees (Longitude), OK</pre>
+
+<h2 id="tracker"><a class="permalink" href="#tracker">Sending APRS position reports</a></h2>
+
+APRS position reports can be sent using <a
+href="https://man.hambsd.org/aprsd.8">aprsd(8)</a> and are configured with a
+file described by <a
+href="https://man.hambsd.org/aprsd.conf.5">aprsd.conf(5)</a>.
+<p>In the simplest case, to beacon your current GPS position, create the
+configuration file at <tt>/etc/aprsd.conf</tt> with the contents:
+<pre>beacon position sensor nmea0</pre>
+<p>Then enable and start the <a                                       
+href="https://man.hambsd.org/aprsd.8">aprsd(8)</a> service:
+<pre># rcctl enable aprsd
+# rcctl start aprsd</pre>
+
+<h2 id="aprsis"><a class="permalink" href="#aprsis">Connecting to APRS-IS</a></h2>
+
+<p>Create a new file <tt>/etc/hostname.axtap0</tt> with the contents:
+<pre>!aprsisd -i axtap0 MYCALL</pre>
+<p>(Replace <em>MYCALL</em> with your callsign.)
+<p>Start the interface with:
+<pre># sh /etc/netstart axtap0</pre>
+<p>For more advanced options, see the <a href="https://man.hambsd.org/aprsisd.8">
+aprsisd(8) manual page</a>.
