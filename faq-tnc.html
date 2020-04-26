@@ -71,25 +71,21 @@ file before calling ldattach:
 
 <h2 id="kisstcp"><a class="permalink" href="#kisstcp">Using KISS-over-TCP</a></h2>
 
-<p>(This is not wrong, but <a
-href="https://man.hambsd.org/rkissd.8">rkissd(8)</a> is the preferred way to do
-this now. Need to update this answer.)</p>
+To use KISS-over-TCP, for example with Dire Wolf, the <a
+href="https://man.hambsd.org/rkissd.8">rkissd(8)</a> daemon can be used.
 
 <p>
-There is currently no reliable method for this, as a broken TCP connection will not be reconnected.
-If the station will be attended as this is acceptable, first install <code>net/socat</code> from ports
-or packages:
+To start an interface automatically at boot, create a new <a
+href="https://man.hambsd.org/hostname.if.5">hostname.if(5)</a> file for a
+<code>kiss</code> interface (e.g. <code>/etc/hostname.kiss0</code>):
 
-<pre>pkg_add socat</pre>
+<pre>!rkissd 192.168.0.10 8001</pre>
 
 <p>
-You can then use socat to bridge a TCP connection to a pty. Assuming the KISS TCP server
-is at 192.0.2.8 on port 8001:
+To start an interface manually:
 
-<pre>socat tcp:192.0.2.8:8001 pty &amp;</pre>
-
-<p>You can now proceed using the new pseudo-terminal as the serial port. You may wish to increase
-socat's verbosity to have it print the pty in use to avoid trial-and-error.
+<pre>ifconfig create kiss0
+rkissd 192.168.0.10 8001</pre>
 
 </body>
 </html>
