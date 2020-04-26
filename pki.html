@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+
+<title>HamBSD: HamPKI</title>
+<meta name="description" content="HamBSD Source Code">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="openbsd.css">
+<link rel="canonical" href="https://hambsd.org/pki.html">
+
+<h2 id="HamBSD">
+<a href="index.html">
+<b>Ham</b><i>BSD</i></a>
+HamPKI
+</h2>
+<hr>
+<p>To build robust and resilient amateur packet networks, they need to be able
+to resist attack. As with other systems with poor or non-existent
+authentication, over time the probability that they will be attacked approaches
+certainty.
+<p>We have seen this happen again and again, and in some cases it has
+removed applications from existence.
+Example range from guestbooks on personal websites <a
+href="https://en.wikipedia.org/wiki/Spamdexing#Link_spam">filled with spam</a>
+to attacks on communications signalling systems (e.g. <a
+href="https://en.wikipedia.org/wiki/BGP_hijacking">BGP</a>, <a
+href="https://www.theguardian.com/technology/2016/apr/19/ss7-hack-explained-mobile-phone-vulnerability-snooping-texts-calls">SS7</a>).
+Another recent example is the <a
+href="https://dkg.fifthhorseman.net/blog/openpgp-certificate-flooding.html">certificate
+flooding attacks</a> on OpenPGP key servers.
+Personal guestbooks and the OpenPGP key servers have drifted into the past,
+replaced by comments sections authenticated by Facebook accounts and new <a
+href="https://wiki.gnupg.org/WKD">key distribution systems</a>.
+Even where applications have survived, they are no longer as easy to use.
+<p>HamPKI aims to prevent amateur radio services from falling to the same fate
+by providing a framework for authenticating radio amateurs using packet radio
+systems.
+<h3>Root Certificate Bundle</h3>
+<p>HamBSD includes an additional CA bundle found at
+<code>/etc/hamcert.pem</code>. This bundle can be used to authenticate servers
+and clients as licensed radio amateurs. Callsigns are found in issued
+certificates as <code>OID.1.3.6.1.4.1.12348.1.1</code>.
+<ul>
+<li><a href="https://raw.githubusercontent.com/HamBSD/src/master/lib/libcrypto/hamcert.pem">Download the latest bundle</a>
+</ul>
+<h3>Future Goals</h3>
+<ul>
+<li>Produce a policy for inclusion of new root certificates</li>
+<li>Produce a toolkit for operating a CA</li>
+</ul>
