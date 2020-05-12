@@ -71,10 +71,12 @@ number to 2. It was the intention of the specification authors that once layer
 3 (network layer) protocols were deployed that this layer 2 forwarding would
 no longer be required.
 
-<p>The specification included both a "connected mode" and also a simpler
-mode for sending datagrams. The connected mode uses a collection of frame types
-while the datagram mode uses only one type: "Unnumbered Information" (UI)
-frames.
+<p>The specification includes a "connected mode" analagous to TCP, offering a
+reliable transport between two hosts with acknowledgements and retransmissions.
+It uses a number of frame types to carry data and to provide signalling for the
+connection.  Alternatively a simpler mode can be used more analagous to UDP for
+sending datagrams. This simpler mode uses only one frame type, "Unnumbered
+Information" (UI) frames, to carry data.
 
 <p>HamBSD aims to support the use of AX.25 UI frames for use with <a
 href="proto-aprs.html">APRS</a> and <a href="proto-tcpip.html">TCP/IP</a>. It
