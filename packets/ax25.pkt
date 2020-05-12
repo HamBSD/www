@@ -1,0 +1,34 @@
+{
+  colwidth = 28
+  node_height = 30
+
+  0-47: destination callsign
+  48: C
+  49: V
+  50: V
+  51-54: SSID
+  55: 0
+  56-103: source callsign
+  104: R
+  105: V
+  106: V
+  107-110: SSID
+  111: L
+  112-159: via 1 callsign
+  160: H
+  161: V
+  162: V
+  163-166: SSID
+  167: L
+  168-215: via 2 callsign
+  216: H
+  217: V
+  218: V
+  219-222: SSID
+  223: L
+  224-279: ...
+  280-287: control
+  288-295: PID
+  296-335: information
+}
+
